@@ -92,7 +92,7 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
   // private BorderedText borderedText;
 
 
-  @Override
+  // @Override
   // protected int getLayoutId() {
   //   return R.layout.camera_connection_fragment;
   // }
