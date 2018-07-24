@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-package main.java.com.reactlibrary.tensorflow;
+package com.reactlibrary.tensorflow;
 
 import android.graphics.Bitmap;
 import android.graphics.RectF;
@@ -26,7 +26,7 @@ public interface Classifier {
   /**
    * An immutable result returned by a Classifier describing what was recognized.
    */
-  public class Recognition {
+  class Recognition {
     /**
      * A unique identifier for what has been recognized. Specific to the class, not the instance of
      * the object.

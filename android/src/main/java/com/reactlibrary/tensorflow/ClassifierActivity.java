@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package main.java.com.reactlibrary.tensorflow;
+package com.reactlibrary.tensorflow;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -33,7 +33,7 @@ import java.util.Vector;
 //TODO change
 // import org.tensorflow.demo.OverlayView.DrawCallback;
 // import org.tensorflow.demo.env.BorderedText;
-import main.java.com.reactlibrary.tensorflow.utils.ImageUtils;
+import com.reactlibrary.tensorflow.utils.ImageUtils;
 // import org.tensorflow.demo.env.Logger;
 import com.reactlibrary.R; // Explicit import needed for internal Google builds.
 

@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-package main.java.com.reactlibrary.tensorflow;
+package com.reactlibrary.tensorflow;
 
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;

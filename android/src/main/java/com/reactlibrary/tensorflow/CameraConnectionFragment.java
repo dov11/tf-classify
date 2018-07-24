@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package main.java.com.reactlibrary.tensorflow;
+package com.reactlibrary.tensorflow;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -58,8 +58,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import main.java.com.reactlibrary.tensorflow.utils.Logger;
-import main.java.com.reactlibrary.tensorflow.R; // Explicit import needed for internal Google builds.
+import com.reactlibrary.tensorflow.utils.Logger;
+import com.reactlibrary.tensorflow.R; // Explicit import needed for internal Google builds.
 
 public class CameraConnectionFragment extends Fragment {
   private static final Logger LOGGER = new Logger();
