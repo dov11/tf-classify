@@ -222,7 +222,7 @@ public class CameraConnectionFragment extends Fragment {
   /**
    * The layout identifier to inflate for this Fragment.
    */
-  private final int layout;
+  // private final int layout;
 
 
   private final ConnectionCallback cameraConnectionCallback;
@@ -230,11 +230,11 @@ public class CameraConnectionFragment extends Fragment {
   private CameraConnectionFragment(
       final ConnectionCallback connectionCallback,
       final OnImageAvailableListener imageListener,
-      final int layout,
+      // final int layout,
       final Size inputSize) {
     this.cameraConnectionCallback = connectionCallback;
     this.imageListener = imageListener;
-    this.layout = layout;
+    // this.layout = layout;
     this.inputSize = inputSize;
   }
 
@@ -309,16 +309,18 @@ public class CameraConnectionFragment extends Fragment {
   public static CameraConnectionFragment newInstance(
       final ConnectionCallback callback,
       final OnImageAvailableListener imageListener,
-      final int layout,
+      // final int layout,
       final Size inputSize) {
-    return new CameraConnectionFragment(callback, imageListener, layout, inputSize);
+    return new CameraConnectionFragment(callback, imageListener, 
+    // layout,
+     inputSize);
   }
 
-  @Override
-  public View onCreateView(
-      final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-    return inflater.inflate(layout, container, false);
-  }
+  // @Override
+  // public View onCreateView(
+  //     final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+  //   return inflater.inflate(layout, container, false);
+  // }
 
   // @Override
   // public void onViewCreated(final View view, final Bundle savedInstanceState) {

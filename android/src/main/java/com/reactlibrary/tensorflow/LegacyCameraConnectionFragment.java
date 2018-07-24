@@ -45,12 +45,14 @@ public class LegacyCameraConnectionFragment extends Fragment {
   /**
    * The layout identifier to inflate for this Fragment.
    */
-  private int layout;
+  // private int layout;
 
   public LegacyCameraConnectionFragment(
-      final Camera.PreviewCallback imageListener, final int layout, final Size desiredSize) {
+      final Camera.PreviewCallback imageListener, 
+      // final int layout, 
+      final Size desiredSize) {
     this.imageListener = imageListener;
-    this.layout = layout;
+    // this.layout = layout;
     this.desiredSize = desiredSize;
   }
 
@@ -135,11 +137,11 @@ public class LegacyCameraConnectionFragment extends Fragment {
    */
   private HandlerThread backgroundThread;
 
-  @Override
-  public View onCreateView(
-      final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-    return inflater.inflate(layout, container, false);
-  }
+  // @Override
+  // public View onCreateView(
+  //     final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+  //   return inflater.inflate(layout, container, false);
+  // }
 
   // @Override
   // public void onViewCreated(final View view, final Bundle savedInstanceState) {
