@@ -41,7 +41,7 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
 
   protected static final boolean SAVE_PREVIEW_BITMAP = false;
 
-  // private ResultsView resultsView;
+  private ResultsView resultsView;
 
   private Bitmap rgbFrameBitmap = null;
   private Bitmap croppedBitmap = null;
