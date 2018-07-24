@@ -55,8 +55,8 @@ public class RNTfClassifyModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-    public void createShootWithCompletionHandler(Callback callback) {
-        mCallback = callback;
+    public void createShootWithCompletionHandler() {
+        // mCallback = callback;
         Activity activity = getCurrentActivity();
         if (activity == null) {
             return;

@@ -34,11 +34,11 @@ import java.util.Vector;
 // import org.tensorflow.demo.OverlayView.DrawCallback;
 // import org.tensorflow.demo.env.BorderedText;
 import com.reactlibrary.tensorflow.utils.ImageUtils;
-// import org.tensorflow.demo.env.Logger;
+import com.reactlibrary.tensorflow.utils.Logger;
 import com.reactlibrary.R; // Explicit import needed for internal Google builds.
 
 public class ClassifierActivity extends CameraActivity implements OnImageAvailableListener {
-  // private static final Logger LOGGER = new Logger();
+  private static final Logger LOGGER = new Logger();
 
   protected static final boolean SAVE_PREVIEW_BITMAP = false;
 
@@ -126,9 +126,9 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
     previewHeight = size.getHeight();
 
     sensorOrientation = rotation - getScreenOrientation();
-    // LOGGER.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
+    LOGGER.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
 
-    // LOGGER.i("Initializing at size %dx%d", previewWidth, previewHeight);
+    LOGGER.i("Initializing at size %dx%d", previewWidth, previewHeight);
     rgbFrameBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Config.ARGB_8888);
     croppedBitmap = Bitmap.createBitmap(INPUT_SIZE, INPUT_SIZE, Config.ARGB_8888);
 
@@ -166,7 +166,7 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
             final long startTime = SystemClock.uptimeMillis();
             final List<Classifier.Recognition> results = classifier.recognizeImage(croppedBitmap);
             lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
-            // LOGGER.i("Detect: %s", results);
+            LOGGER.i("Detect: %s", results);
             cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
             // if (resultsView == null) {
             //   resultsView = (ResultsView) findViewById(R.id.results);
