@@ -76,7 +76,7 @@ public abstract class CameraActivity extends Activity
     super.onCreate(null);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-    setContentView(R.layout.activity_camera);
+    // setContentView(R.layout.activity_camera);
 
     if (hasPermission()) {
       setFragment();
@@ -381,7 +381,7 @@ public abstract class CameraActivity extends Activity
 
     getFragmentManager()
         .beginTransaction()
-        .replace(R.id.container, fragment)
+        // .replace(R.id.container, fragment)
         .commit();
   }
 

@@ -141,10 +141,10 @@ public class LegacyCameraConnectionFragment extends Fragment {
     return inflater.inflate(layout, container, false);
   }
 
-  @Override
-  public void onViewCreated(final View view, final Bundle savedInstanceState) {
-    textureView = (AutoFitTextureView) view.findViewById(R.id.texture);
-  }
+  // @Override
+  // public void onViewCreated(final View view, final Bundle savedInstanceState) {
+  //   textureView = (AutoFitTextureView) view.findViewById(R.id.texture);
+  // }
 
   @Override
   public void onActivityCreated(final Bundle savedInstanceState) {
