@@ -369,14 +369,16 @@ public abstract class CameraActivity extends Activity
                 }
               },
               this,
-              getLayoutId(),
+              // getLayoutId(),
               getDesiredPreviewFrameSize());
 
       camera2Fragment.setCamera(cameraId);
       fragment = camera2Fragment;
     } else {
       fragment =
-          new LegacyCameraConnectionFragment(this, getLayoutId(), getDesiredPreviewFrameSize());
+          new LegacyCameraConnectionFragment(this, 
+          // getLayoutId(), 
+          getDesiredPreviewFrameSize());
     }
 
     getFragmentManager()
@@ -452,6 +454,6 @@ public abstract class CameraActivity extends Activity
   protected abstract void processImage();
 
   protected abstract void onPreviewSizeChosen(final Size size, final int rotation);
-  protected abstract int getLayoutId();
+  // protected abstract int getLayoutId();
   protected abstract Size getDesiredPreviewFrameSize();
 }
