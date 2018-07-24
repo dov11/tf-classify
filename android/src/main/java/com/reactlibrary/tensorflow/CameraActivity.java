@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package main.java.com.reactlibrary.tensorflow;
+package com.reactlibrary.tensorflow;
 
 import android.Manifest;
 import android.app.Activity;
@@ -47,7 +47,7 @@ import com.reactlibrary.R; // Explicit import needed for internal Google builds.
 
 public abstract class CameraActivity extends Activity
     implements OnImageAvailableListener, Camera.PreviewCallback {
-  // private static final Logger LOGGER = new Logger();
+  private static final Logger LOGGER = new Logger();
 
   private static final int PERMISSIONS_REQUEST = 1;
 
@@ -72,7 +72,7 @@ public abstract class CameraActivity extends Activity
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
-    // LOGGER.d("onCreate " + this);
+    LOGGER.d("onCreate " + this);
     super.onCreate(null);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -402,19 +402,19 @@ public abstract class CameraActivity extends Activity
     return debug;
   }
 
-  public void requestRender() {
-    final OverlayView overlay = (OverlayView) findViewById(R.id.debug_overlay);
-    if (overlay != null) {
-      overlay.postInvalidate();
-    }
-  }
+  // public void requestRender() {
+  //   final OverlayView overlay = (OverlayView) findViewById(R.id.debug_overlay);
+  //   if (overlay != null) {
+  //     overlay.postInvalidate();
+  //   }
+  // }
 
-  public void addCallback(final OverlayView.DrawCallback callback) {
-    final OverlayView overlay = (OverlayView) findViewById(R.id.debug_overlay);
-    if (overlay != null) {
-      overlay.addCallback(callback);
-    }
-  }
+  // public void addCallback(final OverlayView.DrawCallback callback) {
+  //   final OverlayView overlay = (OverlayView) findViewById(R.id.debug_overlay);
+  //   if (overlay != null) {
+  //     overlay.addCallback(callback);
+  //   }
+  // }
 
   public void onSetDebug(final boolean debug) {}
 
@@ -423,7 +423,7 @@ public abstract class CameraActivity extends Activity
     if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP
             || keyCode == KeyEvent.KEYCODE_BUTTON_L1 || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
       debug = !debug;
-      requestRender();
+      // requestRender();
       onSetDebug(debug);
       return true;
     }

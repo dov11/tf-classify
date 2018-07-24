@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package main.java.com.reactlibrary.tensorflow;
+package com.reactlibrary.tensorflow;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
