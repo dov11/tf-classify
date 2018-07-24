@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.reactlibrary.tensorflow;
+package main.java.com.reactlibrary.tensorflow;
 
 import android.Manifest;
 import android.app.Activity;
@@ -41,8 +41,8 @@ import android.view.Surface;
 import android.view.WindowManager;
 import android.widget.Toast;
 import java.nio.ByteBuffer;
-import com.reactlibrary.tensorflow.utils.ImageUtils;
-// import org.tensorflow.demo.env.Logger;
+import main.java.com.reactlibrary.tensorflow.utils.ImageUtils;
+import main.java.com.reactlibrary.tensorflow.utils.Logger;
 import com.reactlibrary.R; // Explicit import needed for internal Google builds.
 
 public abstract class CameraActivity extends Activity

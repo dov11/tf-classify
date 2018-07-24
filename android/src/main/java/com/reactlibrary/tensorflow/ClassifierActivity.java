@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.reactlibrary.tensorflow;
+package main.java.com.reactlibrary.tensorflow;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -33,7 +33,7 @@ import java.util.Vector;
 //TODO change
 // import org.tensorflow.demo.OverlayView.DrawCallback;
 // import org.tensorflow.demo.env.BorderedText;
-import com.reactlibrary.tensorflow.utils.ImageUtils;
+import main.java.com.reactlibrary.tensorflow.utils.ImageUtils;
 // import org.tensorflow.demo.env.Logger;
 import com.reactlibrary.R; // Explicit import needed for internal Google builds.
 
@@ -42,7 +42,7 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
 
   protected static final boolean SAVE_PREVIEW_BITMAP = false;
 
-  private ResultsView resultsView;
+  // private ResultsView resultsView;
 
   private Bitmap rgbFrameBitmap = null;
   private Bitmap croppedBitmap = null;
@@ -168,11 +168,11 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
             lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
             // LOGGER.i("Detect: %s", results);
             cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
-            if (resultsView == null) {
-              resultsView = (ResultsView) findViewById(R.id.results);
-            }
-            resultsView.setResults(results);
-            requestRender();
+            // if (resultsView == null) {
+            //   resultsView = (ResultsView) findViewById(R.id.results);
+            // }
+            // resultsView.setResults(results);
+            // requestRender();
             readyForNextImage();
           }
         });

@@ -6,7 +6,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Callback;
-import com.reactlibrary.tensorflow.ClassifierActivity;
+import main.java.com.reactlibrary.tensorflow.ClassifierActivity;
 import android.app.Activity;
 import android.content.Intent;
 
