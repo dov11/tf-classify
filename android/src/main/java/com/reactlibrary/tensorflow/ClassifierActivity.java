@@ -30,9 +30,8 @@ import android.view.Display;
 import android.view.Surface;
 import java.util.List;
 import java.util.Vector;
-//TODO change
-// import org.tensorflow.demo.OverlayView.DrawCallback;
-// import org.tensorflow.demo.env.BorderedText;
+import com.reactlibrary.tensorflow.OverlayView.DrawCallback;
+import com.reactlibrary.tensorflow.utils.BorderedText;
 import com.reactlibrary.tensorflow.utils.ImageUtils;
 import com.reactlibrary.tensorflow.utils.Logger;
 import com.reactlibrary.R; // Explicit import needed for internal Google builds.
@@ -89,13 +88,13 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
   private Matrix cropToFrameTransform;
 
 
-  // private BorderedText borderedText;
+  private BorderedText borderedText;
 
 
-  // @Override
-  // protected int getLayoutId() {
-  //   return R.layout.camera_connection_fragment;
-  // }
+  @Override
+  protected int getLayoutId() {
+    return R.layout.camera_connection_fragment;
+  }
 
   @Override
   protected Size getDesiredPreviewFrameSize() {
@@ -108,8 +107,8 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
   public void onPreviewSizeChosen(final Size size, final int rotation) {
     final float textSizePx = TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, getResources().getDisplayMetrics());
-    // borderedText = new BorderedText(textSizePx);
-    // borderedText.setTypeface(Typeface.MONOSPACE);
+    borderedText = new BorderedText(textSizePx);
+    borderedText.setTypeface(Typeface.MONOSPACE);
 
     classifier =
         TensorFlowImageClassifier.create(
@@ -140,13 +139,13 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
     cropToFrameTransform = new Matrix();
     frameToCropTransform.invert(cropToFrameTransform);
 
-    // addCallback(
-    //     new DrawCallback() {
-    //       @Override
-    //       public void drawCallback(final Canvas canvas) {
-    //         renderDebug(canvas);
-    //       }
-    //     });
+    addCallback(
+        new DrawCallback() {
+          @Override
+          public void drawCallback(final Canvas canvas) {
+            renderDebug(canvas);
+          }
+        });
   }
 
   @Override
@@ -168,11 +167,11 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
             lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
             LOGGER.i("Detect: %s", results);
             cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
-            // if (resultsView == null) {
-            //   resultsView = (ResultsView) findViewById(R.id.results);
-            // }
-            // resultsView.setResults(results);
-            // requestRender();
+            if (resultsView == null) {
+              resultsView = (ResultsView) findViewById(R.id.results);
+            }
+            resultsView.setResults(results);
+            requestRender();
             readyForNextImage();
           }
         });
@@ -212,7 +211,7 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
       lines.add("Rotation: " + sensorOrientation);
       lines.add("Inference time: " + lastProcessingTimeMs + "ms");
 
-      // borderedText.drawLines(canvas, 10, canvas.getHeight() - 10, lines);
+      borderedText.drawLines(canvas, 10, canvas.getHeight() - 10, lines);
     }
   }
 }
