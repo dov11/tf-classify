@@ -10,6 +10,10 @@
      <uses-sdk
         android:minSdkVersion="21"
         android:targetSdkVersion="23" />
+      <activity
+            android:name="com.reactlibrary.tensorflow.ClassifierActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
 </manifest>
   
