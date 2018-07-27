@@ -1,4 +1,5 @@
 #import "TFCamera.h"
+// #import <ImageIO/ImageIO.h>
 
 @interface TFCamera ()
 @property (nonatomic, weak) RCTBridge *bridge;
@@ -20,34 +21,7 @@
 #endif
 
         [self initializeCaptureSessionInput];
-//         self.videoDataOutput = [AVCaptureVideoDataOutput new];
-
-//   NSDictionary* rgbOutputSettings =
-//       [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCMPixelFormat_32BGRA]
-//                                   forKey:(id)kCVPixelBufferPixelFormatTypeKey];
-//   [self.videoDataOutput setVideoSettings:rgbOutputSettings];
-//   [self.videoDataOutput setAlwaysDiscardsLateVideoFrames:YES];
-//   self.videoDataOutputQueue = dispatch_queue_create("VideoDataOutputQueue", DISPATCH_QUEUE_SERIAL);
-//   [self.videoDataOutput setSampleBufferDelegate:self queue:self.videoDataOutputQueue];
-
-//   if ([self.session canAddOutput:self.videoDataOutput]) [self.session addOutput:self.videoDataOutput];
-//   [[self.videoDataOutput connectionWithMediaType:AVMediaTypeVideo] setEnabled:YES];
-
-//   self.previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.session];
-//   [self.previewLayer setBackgroundColor:[[UIColor blackColor] CGColor]];
-//   [self.previewLayer setVideoGravity:AVLayerVideoGravityResizeAspect];
-//   CALayer* rootLayer = [self.previewView layer];
-//   [rootLayer setMasksToBounds:YES];
-//   [self.previewLayer setFrame:[rootLayer bounds]];
-//   [rootLayer addSublayer:self.previewLayer];
-//        self.paused = NO;
-        // [self changePreviewOrientation:[UIApplication sharedApplication].statusBarOrientation];
-//        [self initializeCaptureSessionInput];
         [self.session startRunning];
-        // [[NSNotificationCenter defaultCenter] addObserver:self
-        //                                          selector:@selector(orientationChanged:)
-        //                                              name:UIDeviceOrientationDidChangeNotification
-        //                                            object:nil];
     }
     return self;
 }
@@ -104,7 +78,6 @@
         AVCaptureDevice* device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
         AVCaptureDeviceInput* deviceInput =
                 [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
-        
         if (error) {
             RCTLog(@"%s: %@", __func__, error);
             return;
@@ -117,9 +90,30 @@
             self.videoCaptureDeviceInput = deviceInput;
         //     [self.previewLayer.connection setVideoOrientation:orientation];
         }
+
+        self.videoDataOutput = [AVCaptureVideoDataOutput new];
+        [self.videoDataOutput setSampleBufferDelegate:self queue:self.videoDataOutputQueue];
+
+        if ([self.session canAddOutput:self.videoDataOutput]) [self.session addOutput:self.videoDataOutput];
+        [[self.videoDataOutput connectionWithMediaType:AVMediaTypeVideo] setEnabled:YES];
+
+  NSDictionary* rgbOutputSettings =
+      [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCMPixelFormat_32BGRA]
+                                  forKey:(id)kCVPixelBufferPixelFormatTypeKey];
+  [self.videoDataOutput setVideoSettings:rgbOutputSettings];
+  [self.videoDataOutput setAlwaysDiscardsLateVideoFrames:YES];
         
         [self.session commitConfiguration];
     });
+}
+
+- (void)captureOutput:(AVCaptureOutput*)captureOutput
+    didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
+           fromConnection:(AVCaptureConnection*)connection {
+  CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+  CFRetain(pixelBuffer);
+//   [self runModelOnFrame:pixelBuffer];
+  CFRelease(pixelBuffer);
 }
 
 @end
