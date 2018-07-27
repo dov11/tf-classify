@@ -7,7 +7,7 @@ const { RNTfClassify } = NativeModules;
 export default class RNTfClassify extends React.Component {
   render() {
     return (
-      <TfCamera />
+      <TfCamera style={{flex: 1}}/>
     )
   }
 };
