@@ -1,16 +1,16 @@
 
 #import "TFCamera.h"
-#import "RNTfClassify.h"
+#import "RNTTfCameraManager.h"
 #import <React/RCTViewManager.h>
 #import <React/RCTBridge.h>
 #import <React/RCTUIManager.h>
 #import <React/RCTUtils.h>
 #import <React/UIView+React.h>
 
-@interface RNTTfCamera : RCTViewManager
-@end
+// @interface RNTTfCamera : RCTViewManager
+// @end
 
-@implementation RNTTfCamera
+@implementation RNTTfCameraManager
 
 // - (dispatch_queue_t)methodQueue
 // {

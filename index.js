@@ -12,4 +12,4 @@ export default class RNTfClassify extends React.Component {
   }
 };
 
-const TfCamera = requireNativeComponent('TfCamera', RNTfClassify)
+const TfCamera = requireNativeComponent('RNTTfCameraManager', RNTfClassify)
