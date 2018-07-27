@@ -20,7 +20,7 @@ RCT_EXPORT_MODULE()
 
 - (UIView *)view
 {
-  return [[TfCamera alloc] initWithBridge:self.bridge];
+  return [[TFCamera alloc] initWithBridge:self.bridge];
 }
 
 @end

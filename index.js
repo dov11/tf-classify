@@ -1,8 +1,6 @@
 
 import React from 'react';
-import { NativeModules, requireNativeComponent } from 'react-native';
-
-const { RNTfClassify } = NativeModules;
+import { requireNativeComponent } from 'react-native';
 
 export default class RNTfClassify extends React.Component {
   render() {
@@ -12,4 +10,4 @@ export default class RNTfClassify extends React.Component {
   }
 };
 
-const TfCamera = requireNativeComponent('RNTTfCameraManager', RNTfClassify)
+const TfCamera = requireNativeComponent('RNTTfCamera', RNTfClassify)
