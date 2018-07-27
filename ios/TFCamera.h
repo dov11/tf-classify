@@ -11,6 +11,7 @@
 @property(nonatomic) AVCaptureVideoPreviewLayer* previewLayer;
 @property(nonatomic) AVCaptureVideoDataOutput* videoDataOutput;
 @property(nonatomic) dispatch_queue_t videoDataOutputQueue;
+@property(nonatomic, strong) AVCaptureDeviceInput *videoCaptureDeviceInput;
 @property(nonatomic) UIView* flashView;
 @property(nonatomic) BOOL isUsingFrontFacingCamera;
 // @property(nonatomic) NSMutableDictionary* oldPredictionValues;
