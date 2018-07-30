@@ -26,6 +26,8 @@
   std::unique_ptr<tflite::FlatBufferModel> model;
   tflite::ops::builtin::BuiltinOpResolver resolver;
   std::unique_ptr<tflite::Interpreter> interpreter;
+  double total_latency;
+  int total_count;
 }
   - (id)initWithBridge:(RCTBridge *)bridge;
 @end
