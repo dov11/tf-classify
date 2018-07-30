@@ -224,7 +224,7 @@ static void GetTopN(const uint8_t* prediction, const int prediction_size, const 
            fromConnection:(AVCaptureConnection*)connection {
   CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
   CFRetain(pixelBuffer);
-//   [self runModelOnFrame:pixelBuffer];
+  [self runModelOnFrame:pixelBuffer];
   CFRelease(pixelBuffer);
 }
 
@@ -309,7 +309,23 @@ static void GetTopN(const uint8_t* prediction, const int prediction_size, const 
   CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
 }
 - (void)setPredictionValues:(NSDictionary*)newValues {
-  NSLog(@"newValues", newValues);
+    const float decayValue = 0.75f;
+    const float updateValue = 0.25f;
+    const float minimumThreshold = 0.01f;
+  // NSLog(@"newValues", newValues);
+    for (NSString* label in newValues) {
+    NSNumber* newPredictionValueObject = [newValues objectForKey:label];
+    NSNumber* oldPredictionValueObject = [oldPredictionValues objectForKey:label];
+    if (!oldPredictionValueObject) {
+      oldPredictionValueObject = [NSNumber numberWithFloat:0.0f];
+    }
+    const float newPredictionValue = [newPredictionValueObject floatValue];
+    const float oldPredictionValue = [oldPredictionValueObject floatValue];
+    const float updatedPredictionValue = (oldPredictionValue + (newPredictionValue * updateValue));
+    NSNumber* updatedPredictionValueObject = [NSNumber numberWithFloat:updatedPredictionValue];
+    [oldPredictionValues setObject:updatedPredictionValueObject forKey:label];
+    NSLog(@"newValues label %@ value %.2f", label, newPredictionValue );
+  }
 }
 
 @end
