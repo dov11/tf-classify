@@ -11,21 +11,21 @@
 
 @class TFCamera;
 
-@interface TFCamera : UIView <AVCaptureVideoDataOutputSampleBufferDelegate>
-@property(nonatomic) IBOutlet UIView* previewView;
-@property(nonatomic) AVCaptureVideoPreviewLayer* previewLayer;
-@property(nonatomic) AVCaptureVideoDataOutput* videoDataOutput;
-@property(nonatomic) dispatch_queue_t videoDataOutputQueue;
-@property(nonatomic, strong) AVCaptureDeviceInput *videoCaptureDeviceInput;
-@property(nonatomic) UIView* flashView;
-@property(nonatomic) BOOL isUsingFrontFacingCamera;
-// @property(nonatomic) NSMutableDictionary* oldPredictionValues;
-// @property(nonatomic) NSMutableArray* labelLayers;
-@property(nonatomic) AVCaptureSession* session;
+@interface TFCamera : UIView <AVCaptureVideoDataOutputSampleBufferDelegate> {
+ IBOutlet UIView* previewView;
+ AVCaptureVideoPreviewLayer* previewLayer;
+ AVCaptureVideoDataOutput* videoDataOutput;
+ dispatch_queue_t videoDataOutputQueue;
+ AVCaptureDeviceInput *videoCaptureDeviceInput;
+ UIView* flashView;
+ BOOL isUsingFrontFacingCamera;
+  NSMutableDictionary* oldPredictionValues;
+ AVCaptureSession* session;
   NSMutableArray* labelLayers;
   std::vector<std::string> labels;
   std::unique_ptr<tflite::FlatBufferModel> model;
   tflite::ops::builtin::BuiltinOpResolver resolver;
   std::unique_ptr<tflite::Interpreter> interpreter;
+}
   - (id)initWithBridge:(RCTBridge *)bridge;
 @end

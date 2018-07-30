@@ -100,14 +100,14 @@ static void GetTopN(const uint8_t* prediction, const int prediction_size, const 
 {
     if ((self = [super init])) {
         self.bridge = bridge;
-        self.session = [AVCaptureSession new];
-//        self.sessionQueue = dispatch_queue_create("cameraQueue", DISPATCH_QUEUE_SERIAL);
-        self.videoDataOutputQueue = dispatch_queue_create("VideoDataOutputQueue", DISPATCH_QUEUE_SERIAL);
+        session = [AVCaptureSession new];
+//        sessionQueue = dispatch_queue_create("cameraQueue", DISPATCH_QUEUE_SERIAL);
+        videoDataOutputQueue = dispatch_queue_create("VideoDataOutputQueue", DISPATCH_QUEUE_SERIAL);
 #if !(TARGET_IPHONE_SIMULATOR)
-        self.previewLayer =
-        [AVCaptureVideoPreviewLayer layerWithSession:self.session];
-        self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-        self.previewLayer.needsDisplayOnBoundsChange = YES;
+        previewLayer =
+        [AVCaptureVideoPreviewLayer layerWithSession:session];
+        previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+        previewLayer.needsDisplayOnBoundsChange = YES;
 #endif
         labelLayers = [[NSMutableArray alloc] init];
   oldPredictionValues = [[NSMutableDictionary alloc] init];
@@ -133,16 +133,16 @@ static void GetTopN(const uint8_t* prediction, const int prediction_size, const 
   }
 
         [self initializeCaptureSessionInput];
-        [self.session startRunning];
+        [session startRunning];
     }
     return self;
 }
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.previewLayer.frame = self.bounds;
+    previewLayer.frame = self.bounds;
     [self setBackgroundColor:[UIColor blackColor]];
-    [self.layer insertSublayer:self.previewLayer atIndex:0];
+    [self.layer insertSublayer:previewLayer atIndex:0];
 }
 
 - (void)insertReactSubview:(UIView *)view atIndex:(NSInteger)atIndex
@@ -168,7 +168,7 @@ static void GetTopN(const uint8_t* prediction, const int prediction_size, const 
 
 - (void)initializeCaptureSessionInput
 {
-//     if (self.videoCaptureDeviceInput.device.position == self.presetCamera) {
+//     if (videoCaptureDeviceInput.device.position == presetCamera) {
 //         return;
 //     }
     __block UIInterfaceOrientation interfaceOrientation;
@@ -183,8 +183,8 @@ static void GetTopN(const uint8_t* prediction, const int prediction_size, const 
     }
     
 //     AVCaptureVideoOrientation orientation = [RNCameraUtils videoOrientationForInterfaceOrientation:interfaceOrientation];
-    dispatch_async(self.videoDataOutputQueue, ^{
-        [self.session beginConfiguration];
+    dispatch_async(videoDataOutputQueue, ^{
+        [session beginConfiguration];
         
         NSError *error = nil;
         AVCaptureDevice* device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -195,27 +195,27 @@ static void GetTopN(const uint8_t* prediction, const int prediction_size, const 
             return;
         }
         
-        [self.session removeInput:self.videoCaptureDeviceInput];
-        if ([self.session canAddInput:deviceInput]) {
-            [self.session addInput:deviceInput];
+        [session removeInput:videoCaptureDeviceInput];
+        if ([session canAddInput:deviceInput]) {
+            [session addInput:deviceInput];
             
-            self.videoCaptureDeviceInput = deviceInput;
-        //     [self.previewLayer.connection setVideoOrientation:orientation];
+            videoCaptureDeviceInput = deviceInput;
+        //     [previewLayer.connection setVideoOrientation:orientation];
         }
 
-        self.videoDataOutput = [AVCaptureVideoDataOutput new];
-        [self.videoDataOutput setSampleBufferDelegate:self queue:self.videoDataOutputQueue];
+        videoDataOutput = [AVCaptureVideoDataOutput new];
+        [videoDataOutput setSampleBufferDelegate:self queue:videoDataOutputQueue];
 
-        if ([self.session canAddOutput:self.videoDataOutput]) [self.session addOutput:self.videoDataOutput];
-        [[self.videoDataOutput connectionWithMediaType:AVMediaTypeVideo] setEnabled:YES];
+        if ([session canAddOutput:videoDataOutput]) [session addOutput:videoDataOutput];
+        [[videoDataOutput connectionWithMediaType:AVMediaTypeVideo] setEnabled:YES];
 
   NSDictionary* rgbOutputSettings =
       [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCMPixelFormat_32BGRA]
                                   forKey:(id)kCVPixelBufferPixelFormatTypeKey];
-  [self.videoDataOutput setVideoSettings:rgbOutputSettings];
-  [self.videoDataOutput setAlwaysDiscardsLateVideoFrames:YES];
+  [videoDataOutput setVideoSettings:rgbOutputSettings];
+  [videoDataOutput setAlwaysDiscardsLateVideoFrames:YES];
         
-        [self.session commitConfiguration];
+        [session commitConfiguration];
     });
 }
 
