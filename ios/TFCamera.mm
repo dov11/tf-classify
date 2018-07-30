@@ -1,4 +1,8 @@
 #import "TFCamera.h"
+#import <AssertMacros.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <CoreImage/CoreImage.h>
+#import <ImageIO/ImageIO.h>
 // #import <ImageIO/ImageIO.h>
 #include <sys/time.h>
 #include <fstream>
@@ -105,6 +109,28 @@ static void GetTopN(const uint8_t* prediction, const int prediction_size, const 
         self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
         self.previewLayer.needsDisplayOnBoundsChange = YES;
 #endif
+        labelLayers = [[NSMutableArray alloc] init];
+  oldPredictionValues = [[NSMutableDictionary alloc] init];
+
+  NSString* graph_path = FilePathForResourceName(model_file_name, @"tflite");
+  model = tflite::FlatBufferModel::BuildFromFile([graph_path UTF8String]);
+  if (!model) {
+    LOG(FATAL) << "Failed to mmap model " << graph_path;
+  }
+  LOG(INFO) << "Loaded model " << graph_path;
+  model->error_reporter();
+  LOG(INFO) << "resolved reporter";
+
+  tflite::ops::builtin::BuiltinOpResolver resolver;
+  LoadLabels(labels_file_name, labels_file_type, &labels);
+
+  tflite::InterpreterBuilder(*model, resolver)(&interpreter);
+  if (!interpreter) {
+    LOG(FATAL) << "Failed to construct interpreter";
+  }
+  if (interpreter->AllocateTensors() != kTfLiteOk) {
+    LOG(FATAL) << "Failed to allocate tensors!";
+  }
 
         [self initializeCaptureSessionInput];
         [self.session startRunning];

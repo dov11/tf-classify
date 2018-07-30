@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		26253EFA210B270200A5B278 /* RNTTfCameraManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 26253EF9210B270200A5B278 /* RNTTfCameraManager.m */; };
 		26253F85210B6ED400A5B278 /* TFCamera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 26253F84210B6ED400A5B278 /* TFCamera.mm */; };
+		26254023210F002E00A5B278 /* RNTTfCameraManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 26254022210F002E00A5B278 /* RNTTfCameraManager.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,8 +27,8 @@
 		134814201AA4EA6300B7C361 /* libRNTfClassify.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNTfClassify.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		26253EF5210B269B00A5B278 /* TFCamera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TFCamera.h; sourceTree = "<group>"; };
 		26253EF8210B270100A5B278 /* RNTTfCameraManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNTTfCameraManager.h; sourceTree = "<group>"; };
-		26253EF9210B270200A5B278 /* RNTTfCameraManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNTTfCameraManager.m; sourceTree = "<group>"; };
 		26253F84210B6ED400A5B278 /* TFCamera.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TFCamera.mm; sourceTree = "<group>"; };
+		26254022210F002E00A5B278 /* RNTTfCameraManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RNTTfCameraManager.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,7 +56,7 @@
 				26253EF5210B269B00A5B278 /* TFCamera.h */,
 				26253EF8210B270100A5B278 /* RNTTfCameraManager.h */,
 				26253F84210B6ED400A5B278 /* TFCamera.mm */,
-				26253EF9210B270200A5B278 /* RNTTfCameraManager.m */,
+				26254022210F002E00A5B278 /* RNTTfCameraManager.mm */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -118,7 +118,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				26253F85210B6ED400A5B278 /* TFCamera.mm in Sources */,
-				26253EFA210B270200A5B278 /* RNTTfCameraManager.m in Sources */,
+				26254023210F002E00A5B278 /* RNTTfCameraManager.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,6 +214,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
+					"${SRCROOT}/../../../ios/Pods/TensorFlowLite/Frameworks/tensorflow_lite.framework/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
@@ -230,6 +231,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
+					"${SRCROOT}/../../../ios/Pods/TensorFlowLite/Frameworks/tensorflow_lite.framework/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
