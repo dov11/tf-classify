@@ -309,7 +309,7 @@ static void GetTopN(const uint8_t* prediction, const int prediction_size, const 
   CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
 }
 - (void)setPredictionValues:(NSDictionary*)newValues {
-  NSLog(@"newValues", newValues)
+  NSLog(@"newValues", newValues);
 }
 
 @end
