@@ -93,6 +93,7 @@ static void GetTopN(const uint8_t* prediction, const int prediction_size, const 
 
 @interface TFCamera ()
 @property (nonatomic, weak) RCTBridge *bridge;
+@property (nonatomic, copy) RCTDirectEventBlock onPredictionMade;
 @end
 
 @implementation TFCamera
@@ -325,7 +326,22 @@ static void GetTopN(const uint8_t* prediction, const int prediction_size, const 
     NSNumber* updatedPredictionValueObject = [NSNumber numberWithFloat:updatedPredictionValue];
     [oldPredictionValues setObject:updatedPredictionValueObject forKey:label];
     NSLog(@"newValues label %@ value %.2f", label, newPredictionValue );
+    NSDictionary *event = @{
+                                            @"label" : label,
+                                            @"value" : newPredictionValue
+                                            };
+                    
+                    [self onPredictionMade:event];
   }
 }
+
+- (void)onPredictionMade:(NSDictionary *)event
+{
+    if (_onPredictionMade) {
+        _onPredictionMade(event);
+    }
+}
+
+//TODO bridge background-foreground
 
 @end

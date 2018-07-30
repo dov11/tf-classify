@@ -30,4 +30,5 @@
   int total_count;
 }
   - (id)initWithBridge:(RCTBridge *)bridge;
+  - (void)onPredictionMade:(NSDictionary *)event;
 @end
