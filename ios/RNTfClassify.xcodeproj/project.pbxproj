@@ -29,6 +29,7 @@
 		26253EF8210B270100A5B278 /* RNTTfCameraManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNTTfCameraManager.h; sourceTree = "<group>"; };
 		26253F84210B6ED400A5B278 /* TFCamera.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TFCamera.mm; sourceTree = "<group>"; };
 		26254022210F002E00A5B278 /* RNTTfCameraManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RNTTfCameraManager.mm; sourceTree = "<group>"; };
+		269143472110A46D0034198E /* Frameworks */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Frameworks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +59,7 @@
 				26253F84210B6ED400A5B278 /* TFCamera.mm */,
 				26254022210F002E00A5B278 /* RNTTfCameraManager.mm */,
 				134814211AA4EA7D00B7C361 /* Products */,
+				269143472110A46D0034198E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -209,12 +211,16 @@
 		58B511F01A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
-					"${SRCROOT}Frameworks/TensorFlowLite/Frameworks/tensorflow_lite.framework/Headers",
+					"${SRCROOT}/Frameworks/tensorflow_lite.framework/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
@@ -226,12 +232,16 @@
 		58B511F11A9E6C8500147676 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
-					"${SRCROOT}Frameworks/TensorFlowLite/Frameworks/tensorflow_lite.framework/Headers",
+					"${SRCROOT}/Frameworks/tensorflow_lite.framework/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
