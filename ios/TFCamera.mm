@@ -322,7 +322,6 @@ static void GetTopN(const uint8_t *prediction, const int prediction_size,
 
   [self onPredictionMade:event];
 }
-}
 
 - (void)onPredictionMade:(NSDictionary *)event {
   if (_onPredictionMade) {
