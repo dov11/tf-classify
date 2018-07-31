@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		26253F85210B6ED400A5B278 /* TFCamera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 26253F84210B6ED400A5B278 /* TFCamera.mm */; };
 		26254023210F002E00A5B278 /* RNTTfCameraManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 26254022210F002E00A5B278 /* RNTTfCameraManager.mm */; };
+		2691434B2110AF910034198E /* tensorflow_lite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2691434A2110AF910034198E /* tensorflow_lite.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,6 +31,7 @@
 		26253F84210B6ED400A5B278 /* TFCamera.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TFCamera.mm; sourceTree = "<group>"; };
 		26254022210F002E00A5B278 /* RNTTfCameraManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RNTTfCameraManager.mm; sourceTree = "<group>"; };
 		269143472110A46D0034198E /* Frameworks */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Frameworks; sourceTree = "<group>"; };
+		2691434A2110AF910034198E /* tensorflow_lite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = tensorflow_lite.framework; path = Frameworks/tensorflow_lite.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2691434B2110AF910034198E /* tensorflow_lite.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,6 +57,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				2691434A2110AF910034198E /* tensorflow_lite.framework */,
 				26253EF5210B269B00A5B278 /* TFCamera.h */,
 				26253EF8210B270100A5B278 /* RNTTfCameraManager.h */,
 				26253F84210B6ED400A5B278 /* TFCamera.mm */,
