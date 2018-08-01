@@ -19,7 +19,7 @@ limitations under the License.
 #include <memory>
 #include <string>
 #include <vector>
-#include "tensorflow/contrib/lite/tfstring.h"
+#include "tensorflow/contrib/lite/string.h"
 
 namespace tflite {
 namespace testing {
