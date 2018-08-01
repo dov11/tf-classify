@@ -217,7 +217,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Frameworks",
+					"$(PROJECT_DIR)/Frameworks/**",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -227,7 +227,19 @@
 					"${SRCROOT}/Frameworks/tensorflow_lite.framework/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-L",
+					"${SRCROOT}/Frameworks/tensorflow_lite.framework",
+					"-ObjC",
+					"-l\"c++\"",
+					"-framework",
+					"\"Accelerate\"",
+					"-framework",
+					"\"tensorflow_lite\"",
+					"-force_load",
+					"${SRCROOT}/Frameworks/tensorflow_lite.framework/",
+				);
 				PRODUCT_NAME = RNTfClassify;
 				SKIP_INSTALL = YES;
 			};
@@ -238,7 +250,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Frameworks",
+					"$(PROJECT_DIR)/Frameworks/**",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -248,7 +260,19 @@
 					"${SRCROOT}/Frameworks/tensorflow_lite.framework/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-L",
+					"${SRCROOT}/Frameworks/tensorflow_lite.framework",
+					"-ObjC",
+					"-l\"c++\"",
+					"-framework",
+					"\"Accelerate\"",
+					"-framework",
+					"\"tensorflow_lite\"",
+					"-force_load",
+					"${SRCROOT}/Frameworks/tensorflow_lite.framework/",
+				);
 				PRODUCT_NAME = RNTfClassify;
 				SKIP_INSTALL = YES;
 			};

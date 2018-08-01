@@ -12,7 +12,7 @@
 #include "tensorflow/contrib/lite/kernels/register.h"
 #include "tensorflow/contrib/lite/model.h"
 #include "tensorflow/contrib/lite/string_util.h"
-#include "tensorflow/contrib/lite/tools/mutable_op_resolver.h"
+#include "tensorflow/contrib/lite/op_resolver.h"
 
 #define LOG(x) std::cerr
 
@@ -289,7 +289,7 @@ static void GetTopN(const uint8_t *prediction, const int prediction_size,
   NSLog(@"Time: %.4lf, avg: %.4lf, count: %d", endTimestamp - startTimestamp,
         total_latency / total_count, total_count);
 
-  const int output_size = 136;
+  const int output_size = 136; //TODO calculate from labels size
   const int kNumResults = 5;
   const float kThreshold = 0.1f;
 
