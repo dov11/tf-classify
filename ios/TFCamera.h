@@ -32,4 +32,5 @@
 }
 - (id)initWithBridge:(RCTBridge *)bridge;
 - (void)onPredictionMade:(NSDictionary *)event;
+- (void)updatePredicting:(id)json;
 @end

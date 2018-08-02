@@ -13,6 +13,7 @@ export default class RNTfClassify extends React.Component {
       <TfCamera 
       style={{flex: 1}}
       onPredictionMade={this.onPredictionMade(this.props.onPredictionMade)}
+      predictionEnabled={this.props.predictionEnabled}
       />
     )
   }

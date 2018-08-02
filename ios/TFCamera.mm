@@ -11,8 +11,8 @@
 
 #include "tensorflow/contrib/lite/kernels/register.h"
 #include "tensorflow/contrib/lite/model.h"
-#include "tensorflow/contrib/lite/string_util.h"
 #include "tensorflow/contrib/lite/op_resolver.h"
+#include "tensorflow/contrib/lite/string_util.h"
 
 #define LOG(x) std::cerr
 
@@ -41,7 +41,7 @@ static NSString *FilePathForResourceName(NSString *name, NSString *extension) {
 }
 
 static int LoadLabels(NSString *file_name, NSString *file_type,
-                       std::vector<std::string> *label_strings) {
+                      std::vector<std::string> *label_strings) {
   NSString *labels_path = FilePathForResourceName(file_name, file_type);
   int number_of_lines = 0;
   if (!labels_path) {
@@ -55,7 +55,7 @@ static int LoadLabels(NSString *file_name, NSString *file_type,
     std::getline(t, line);
     label_strings->push_back(line);
     if (!line.empty())
-       ++number_of_lines;
+      ++number_of_lines;
   }
   t.close();
   return number_of_lines;
@@ -99,6 +99,8 @@ static void GetTopN(const uint8_t *prediction, const int prediction_size,
 @interface TFCamera ()
 @property(nonatomic, weak) RCTBridge *bridge;
 @property(nonatomic, copy) RCTDirectEventBlock onPredictionMade;
+@property (nonatomic, assign) BOOL allowedToPredict;
+@property (nonatomic, assign) BOOL started;
 @end
 
 @implementation TFCamera
@@ -210,32 +212,25 @@ static void GetTopN(const uint8_t *prediction, const int prediction_size,
       //     [previewLayer.connection setVideoOrientation:orientation];
     }
 
-    videoDataOutput = [AVCaptureVideoDataOutput new];
-    [videoDataOutput setSampleBufferDelegate:self queue:videoDataOutputQueue];
-
-    if ([session canAddOutput:videoDataOutput])
-      [session addOutput:videoDataOutput];
-    [[videoDataOutput connectionWithMediaType:AVMediaTypeVideo] setEnabled:YES];
-
-    NSDictionary *rgbOutputSettings = [NSDictionary
-        dictionaryWithObject:[NSNumber numberWithInt:kCMPixelFormat_32BGRA]
-                      forKey:(id)kCVPixelBufferPixelFormatTypeKey];
-    [videoDataOutput setVideoSettings:rgbOutputSettings];
-    [videoDataOutput setAlwaysDiscardsLateVideoFrames:YES];
-
     [session commitConfiguration];
+    _started = true;
+    [self startPrediction];
   });
 }
 
 - (void)captureOutput:(AVCaptureOutput *)captureOutput
     didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
            fromConnection:(AVCaptureConnection *)connection {
-  CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-  CFRetain(pixelBuffer);
-  [self runModelOnFrame:pixelBuffer];
-  CFRelease(pixelBuffer);
+  if (!_allowedToPredict) {
+    return;
+  }
+    CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+    CFRetain(pixelBuffer);
+    [self runModelOnFrame:pixelBuffer];
+    CFRelease(pixelBuffer);
+  // }
 }
-//TODO set how often one can analyze the input
+// TODO set how often one can analyze the input
 - (void)runModelOnFrame:(CVPixelBufferRef)pixelBuffer {
   assert(pixelBuffer != NULL);
 
@@ -330,6 +325,57 @@ static void GetTopN(const uint8_t *prediction, const int prediction_size,
   if (_onPredictionMade) {
     _onPredictionMade(event);
   }
+}
+
+- (void)updatePredicting:(id)json {
+  BOOL allowedToPredictFromJS = [RCTConvert BOOL:json];
+  if (!allowedToPredictFromJS) {
+    [self stopPrediction];
+  } else if (_started){
+    [self startPrediction];
+  }
+}
+
+- (void)stopPrediction
+{
+    if (!session) {
+        return;
+    }
+    
+    [session beginConfiguration];
+    
+    if ([session.outputs containsObject: videoDataOutput]) {
+        [session removeOutput:videoDataOutput];
+        // [videoDataOutput cleanup];
+        videoDataOutput = nil;
+        _allowedToPredict = false;
+    }
+    
+    [session commitConfiguration];
+}
+
+- (void)startPrediction
+{
+  if (!session) {
+        return;
+    }
+    
+    [session beginConfiguration];
+    videoDataOutput = [AVCaptureVideoDataOutput new];
+    [videoDataOutput setSampleBufferDelegate:self queue:videoDataOutputQueue];
+
+    if ([session canAddOutput:videoDataOutput])
+      [session addOutput:videoDataOutput];
+    [[videoDataOutput connectionWithMediaType:AVMediaTypeVideo] setEnabled:YES];
+
+    NSDictionary *rgbOutputSettings = [NSDictionary
+        dictionaryWithObject:[NSNumber numberWithInt:kCMPixelFormat_32BGRA]
+                      forKey:(id)kCVPixelBufferPixelFormatTypeKey];
+    [videoDataOutput setVideoSettings:rgbOutputSettings];
+    [videoDataOutput setAlwaysDiscardsLateVideoFrames:YES];
+    _allowedToPredict = true;
+
+    [session commitConfiguration];
 }
 
 // TODO bridge background-foreground

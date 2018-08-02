@@ -25,6 +25,11 @@ RCT_EXPORT_VIEW_PROPERTY(onPredictionMade, RCTDirectEventBlock);
   return [[TFCamera alloc] initWithBridge:self.bridge];
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(predictionEnabled, BOOL, TFCamera)
+{
+    [view updatePredicting:json];
+}
+
 - (NSArray<NSString *> *)supportedEvents
 {
     return @[@"onPredictionMade"];
