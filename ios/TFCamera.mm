@@ -40,9 +40,10 @@ static NSString *FilePathForResourceName(NSString *name, NSString *extension) {
   return file_path;
 }
 
-static void LoadLabels(NSString *file_name, NSString *file_type,
+static int LoadLabels(NSString *file_name, NSString *file_type,
                        std::vector<std::string> *label_strings) {
   NSString *labels_path = FilePathForResourceName(file_name, file_type);
+  int number_of_lines = 0;
   if (!labels_path) {
     LOG(ERROR) << "Failed to find model proto at" << [file_name UTF8String]
                << [file_type UTF8String];
@@ -53,8 +54,11 @@ static void LoadLabels(NSString *file_name, NSString *file_type,
   while (t) {
     std::getline(t, line);
     label_strings->push_back(line);
+    if (!line.empty())
+       ++number_of_lines;
   }
   t.close();
+  return number_of_lines;
 }
 
 // Returns the top N confidence values over threshold in the provided vector,
@@ -124,7 +128,7 @@ static void GetTopN(const uint8_t *prediction, const int prediction_size,
     LOG(INFO) << "resolved reporter";
 
     tflite::ops::builtin::BuiltinOpResolver resolver;
-    LoadLabels(labels_file_name, labels_file_type, &labels);
+    output_size = LoadLabels(labels_file_name, labels_file_type, &labels);
 
     tflite::InterpreterBuilder(*model, resolver)(&interpreter);
     if (!interpreter) {
@@ -231,7 +235,7 @@ static void GetTopN(const uint8_t *prediction, const int prediction_size,
   [self runModelOnFrame:pixelBuffer];
   CFRelease(pixelBuffer);
 }
-
+//TODO set how often one can analyze the input
 - (void)runModelOnFrame:(CVPixelBufferRef)pixelBuffer {
   assert(pixelBuffer != NULL);
 
@@ -289,7 +293,6 @@ static void GetTopN(const uint8_t *prediction, const int prediction_size,
   NSLog(@"Time: %.4lf, avg: %.4lf, count: %d", endTimestamp - startTimestamp,
         total_latency / total_count, total_count);
 
-  const int output_size = 136; //TODO calculate from labels size
   const int kNumResults = 5;
   const float kThreshold = 0.1f;
 
