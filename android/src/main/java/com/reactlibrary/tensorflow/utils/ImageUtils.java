@@ -96,7 +96,7 @@ public class ImageUtils {
   static final int kMaxChannelValue = 262143;
 
   // Always prefer the native implementation if available.
-  private static boolean useNativeConversion = true;
+  private static boolean useNativeConversion = false;
 
   public static void convertYUV420SPToARGB8888(
       byte[] input,

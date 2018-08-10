@@ -7,15 +7,4 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-     <uses-sdk
-        android:minSdkVersion="21"
-        android:targetSdkVersion="23" />
-      <application>
-      <activity
-            android:name="com.reactlibrary.tensorflow.ClassifierActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-      </application>
-
 </manifest>
-  

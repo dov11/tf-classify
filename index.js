@@ -14,9 +14,10 @@ export default class RNTfClassify extends React.Component {
       style={{flex: 1}}
       onPredictionMade={this.onPredictionMade(this.props.onPredictionMade)}
       predictionEnabled={this.props.predictionEnabled}
+      autoFocus={true}
       />
     )
   }
 };
 
-const TfCamera = requireNativeComponent('RNTTfCamera', RNTfClassify)
+const TfCamera = requireNativeComponent('TfCamera', RNTfClassify)
