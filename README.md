@@ -42,4 +42,18 @@ import RNTfClassify from 'react-native-tf-classify';
 // TODO: What to do with the module?
 RNTfClassify;
 ```
-  
+
+##Android-Specific
+
+1. add 
+	```
+	aaptOptions {
+		noCompress "tflite"
+	}
+	```
+  to build.gradle in /app
+
+2. place model and labels in assets (e.g. android/app/src/main/assets)
+		model filename: mobilenet_quant_v1_224.tflite
+		label filename: retrained_labels.txt
+		TODO: make adjustable by user

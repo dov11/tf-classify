@@ -15,63 +15,48 @@ limitations under the License.
 
 package com.reactlibrary;
 
-import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import android.os.SystemClock;
 import android.os.Trace;
 import android.util.Log;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Vector;
-import org.tensorflow.lite.Interpreter;
+import org.tensorflow.Operation;
+import org.tensorflow.contrib.android.TensorFlowInferenceInterface;
 
 /** A classifier specialized to label images using TensorFlow. */
-public class TFLiteClassifier implements Classifier {
-  private static final String TAG = "TFLiteImageClassifier";
+public class TensorFlowImageClassifier implements Classifier {
+  private static final String TAG = "TensorFlowImageClassifier";
 
   // Only return this many results with at least this confidence.
   private static final int MAX_RESULTS = 3;
+  private static final float THRESHOLD = 0.1f;
 
-  private Interpreter tfLite;
-
-  /** Dimensions of inputs. */
-  private static final int DIM_BATCH_SIZE = 1;
-
-  private static final int DIM_PIXEL_SIZE = 3;
-
-  private static final int DIM_IMG_SIZE_X = 224;
-  private static final int DIM_IMG_SIZE_Y = 224;
-
-  byte[][] labelProb;
+  // Config values.
+  private String inputName;
+  private String outputName;
+  private int inputSize;
+  private int imageMean;
+  private float imageStd;
 
   // Pre-allocated buffers.
   private Vector<String> labels = new Vector<String>();
   private int[] intValues;
-  private ByteBuffer imgData = null;
+  private float[] floatValues;
+  private float[] outputs;
+  private String[] outputNames;
 
-  private TFLiteClassifier() {}
+  private boolean logStats = false;
 
-  /** Memory-map the model file in Assets. */
-  private static MappedByteBuffer loadModelFile(AssetManager assets, String modelFilename)
-      throws IOException {
-    AssetFileDescriptor fileDescriptor = assets.openFd(modelFilename);
-    FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
-    FileChannel fileChannel = inputStream.getChannel();
-    long startOffset = fileDescriptor.getStartOffset();
-    long declaredLength = fileDescriptor.getDeclaredLength();
-    return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
-  }
+  private TensorFlowInferenceInterface inferenceInterface;
+
+  private TensorFlowImageClassifier() {}
 
   /**
    * Initializes a native TensorFlow session for classifying images.
@@ -80,18 +65,32 @@ public class TFLiteClassifier implements Classifier {
    * @param modelFilename The filepath of the model GraphDef protocol buffer.
    * @param labelFilename The filepath of label file for classes.
    * @param inputSize The input size. A square image of inputSize x inputSize is assumed.
+   * @param imageMean The assumed mean of the image values.
+   * @param imageStd The assumed std of the image values.
+   * @param inputName The label of the image input node.
+   * @param outputName The label of the output node.
    * @throws IOException
    */
   public static Classifier create(
-      AssetManager assetManager, String modelFilename, String labelFilename, int inputSize) {
-    TFLiteClassifier c = new TFLiteClassifier();
+      AssetManager assetManager,
+      String modelFilename,
+      String labelFilename,
+      int inputSize,
+      int imageMean,
+      float imageStd,
+      String inputName,
+      String outputName) {
+    TensorFlowImageClassifier c = new TensorFlowImageClassifier();
+    c.inputName = inputName;
+    c.outputName = outputName;
 
     // Read the label names into memory.
     // TODO(andrewharp): make this handle non-assets.
-    Log.i(TAG, "Reading labels from: " + labelFilename);
+    String actualFilename = labelFilename.split("file:///android_asset/")[1];
+    Log.i(TAG, "Reading labels from: " + actualFilename);
     BufferedReader br = null;
     try {
-      br = new BufferedReader(new InputStreamReader(assetManager.open(labelFilename)));
+      br = new BufferedReader(new InputStreamReader(assetManager.open(actualFilename)));
       String line;
       while ((line = br.readLine()) != null) {
         c.labels.add(line);
@@ -101,48 +100,27 @@ public class TFLiteClassifier implements Classifier {
       throw new RuntimeException("Problem reading label file!" , e);
     }
 
-    c.imgData =
-        ByteBuffer.allocateDirect(
-            DIM_BATCH_SIZE * DIM_IMG_SIZE_X * DIM_IMG_SIZE_Y * DIM_PIXEL_SIZE);
-
-    c.imgData.order(ByteOrder.nativeOrder());
-    try {
-      c.tfLite = new Interpreter(loadModelFile(assetManager, modelFilename));
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    c.inferenceInterface = new TensorFlowInferenceInterface(assetManager, modelFilename);
 
     // The shape of the output is [N, NUM_CLASSES], where N is the batch size.
-    Log.i(TAG, "Read " + c.labels.size() + " labels");
+    final Operation operation = c.inferenceInterface.graphOperation(outputName);
+    final int numClasses = (int) operation.output(0).shape().size(1);
+    Log.i(TAG, "Read " + c.labels.size() + " labels, output layer size is " + numClasses);
+
+    // Ideally, inputSize could have been retrieved from the shape of the input operation.  Alas,
+    // the placeholder node for input in the graphdef typically used does not specify a shape, so it
+    // must be passed in as a parameter.
+    c.inputSize = inputSize;
+    c.imageMean = imageMean;
+    c.imageStd = imageStd;
 
     // Pre-allocate buffers.
+    c.outputNames = new String[] {outputName};
     c.intValues = new int[inputSize * inputSize];
-
-    c.labelProb = new byte[1][c.labels.size()];
+    c.floatValues = new float[inputSize * inputSize * 3];
+    c.outputs = new float[numClasses];
 
     return c;
-  }
-
-  /** Writes Image data into a {@code ByteBuffer}. */
-  private void convertBitmapToByteBuffer(Bitmap bitmap) {
-    if (imgData == null) {
-      return;
-    }
-    imgData.rewind();
-    bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
-    // Convert the image to floating point.
-    int pixel = 0;
-    long startTime = SystemClock.uptimeMillis();
-    for (int i = 0; i < DIM_IMG_SIZE_X; ++i) {
-      for (int j = 0; j < DIM_IMG_SIZE_Y; ++j) {
-        final int val = intValues[pixel++];
-        imgData.put((byte) ((val >> 16) & 0xFF));
-        imgData.put((byte) ((val >> 8) & 0xFF));
-        imgData.put((byte) (val & 0xFF));
-      }
-    }
-    long endTime = SystemClock.uptimeMillis();
-    Log.d(TAG, "Timecost to put values into ByteBuffer: " + Long.toString(endTime - startTime));
   }
 
   @Override
@@ -151,19 +129,30 @@ public class TFLiteClassifier implements Classifier {
     Trace.beginSection("recognizeImage");
 
     Trace.beginSection("preprocessBitmap");
+    // Preprocess the image data from 0-255 int to normalized float based
+    // on the provided parameters.
+    bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
+    for (int i = 0; i < intValues.length; ++i) {
+      final int val = intValues[i];
+      floatValues[i * 3 + 0] = (((val >> 16) & 0xFF) - imageMean) / imageStd;
+      floatValues[i * 3 + 1] = (((val >> 8) & 0xFF) - imageMean) / imageStd;
+      floatValues[i * 3 + 2] = ((val & 0xFF) - imageMean) / imageStd;
+    }
+    Trace.endSection();
 
-    long startTime;
-    long endTime;
-    startTime = SystemClock.uptimeMillis();
-
-    convertBitmapToByteBuffer(bitmap);
+    // Copy the input data into TensorFlow.
+    Trace.beginSection("feed");
+    inferenceInterface.feed(inputName, floatValues, 1, inputSize, inputSize, 3);
+    Trace.endSection();
 
     // Run the inference call.
     Trace.beginSection("run");
-    startTime = SystemClock.uptimeMillis();
-    tfLite.run(imgData, labelProb);
-    endTime = SystemClock.uptimeMillis();
-    Log.i(TAG, "Inf time: " + (endTime - startTime));
+    inferenceInterface.run(outputNames, logStats);
+    Trace.endSection();
+
+    // Copy the output Tensor back into the output array.
+    Trace.beginSection("fetch");
+    inferenceInterface.fetch(outputName, outputs);
     Trace.endSection();
 
     // Find the best classifications.
@@ -177,13 +166,12 @@ public class TFLiteClassifier implements Classifier {
                 return Float.compare(rhs.getConfidence(), lhs.getConfidence());
               }
             });
-    for (int i = 0; i < labels.size(); ++i) {
-      pq.add(
-          new Recognition(
-              "" + i,
-              labels.size() > i ? labels.get(i) : "unknown",
-              (float) labelProb[0][i],
-              null));
+    for (int i = 0; i < outputs.length; ++i) {
+      if (outputs[i] > THRESHOLD) {
+        pq.add(
+            new Recognition(
+                "" + i, labels.size() > i ? labels.get(i) : "unknown", outputs[i], null));
+      }
     }
     final ArrayList<Recognition> recognitions = new ArrayList<Recognition>();
     int recognitionsSize = Math.min(pq.size(), MAX_RESULTS);
@@ -196,14 +184,16 @@ public class TFLiteClassifier implements Classifier {
 
   @Override
   public void enableStatLogging(boolean logStats) {
+    this.logStats = logStats;
   }
 
   @Override
   public String getStatString() {
-    return "";
+    return inferenceInterface.getStatString();
   }
 
   @Override
   public void close() {
+    inferenceInterface.close();
   }
 }
