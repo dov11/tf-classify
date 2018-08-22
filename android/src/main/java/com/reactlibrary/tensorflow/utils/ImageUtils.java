@@ -71,7 +71,14 @@ public class ImageUtils {
         Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "tensorflow";
     LOGGER.i("Saving %dx%d bitmap to %s.", bitmap.getWidth(), bitmap.getHeight(), root);
     final File myDir = new File(root);
-
+    String state = Environment.getExternalStorageState();
+    LOGGER.i("state is %s", state);
+    if (!Environment.MEDIA_MOUNTED.equals(state)) {
+      LOGGER.i("Error: external storage is unavailable");
+    }
+    if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+      LOGGER.i("Error: external storage is read only.");
+    }
     if (!myDir.mkdirs()) {
       LOGGER.i("Make dir failed");
     }

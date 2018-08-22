@@ -16,6 +16,7 @@ public class PredictorAsyncTask extends android.os.AsyncTask<Void, Void, List<Cl
   private byte[] mImageData;
   private int mWidth;
   private int mHeight;
+  private int mSensorOrientation;
   private int[] rgbBytes = null;
   private Runnable imageConverter;
 
@@ -33,12 +34,13 @@ public class PredictorAsyncTask extends android.os.AsyncTask<Void, Void, List<Cl
   }
 
   public PredictorAsyncTask(PredictorAsyncTaskDelegate delegate, Classifier classifier, byte[] imageData, int width,
-      int height) {
+      int height, int sensorOrientation) {
     mDelegate = delegate;
     mClassifier = classifier;
     mImageData = imageData;
     mWidth = width;
     mHeight = height;
+    mSensorOrientation = sensorOrientation;
   }
 
   @Override
@@ -51,7 +53,7 @@ public class PredictorAsyncTask extends android.os.AsyncTask<Void, Void, List<Cl
     }
     rgbFrameBitmap = Bitmap.createBitmap(mWidth, mHeight, Config.ARGB_8888);
     croppedBitmap = Bitmap.createBitmap(INPUT_SIZE, INPUT_SIZE, Config.ARGB_8888);
-    frameToCropTransform = ImageUtils.getTransformationMatrix(mWidth, mHeight, INPUT_SIZE, INPUT_SIZE, 90, true);
+    frameToCropTransform = ImageUtils.getTransformationMatrix(mWidth, mHeight, INPUT_SIZE, INPUT_SIZE, mSensorOrientation, true);
     cropToFrameTransform = new Matrix();
     frameToCropTransform.invert(cropToFrameTransform);
     imageConverter = new Runnable() {
@@ -64,7 +66,7 @@ public class PredictorAsyncTask extends android.os.AsyncTask<Void, Void, List<Cl
     rgbFrameBitmap.setPixels(getRgbBytes(), 0, mWidth, 0, 0, mWidth, mHeight);
     final Canvas canvas = new Canvas(croppedBitmap);
     canvas.drawBitmap(rgbFrameBitmap, frameToCropTransform, null);
-
+    // ImageUtils.saveBitmap(croppedBitmap);
     return mClassifier.recognizeImage(croppedBitmap);
   }
 
